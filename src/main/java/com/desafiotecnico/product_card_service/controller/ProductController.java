@@ -2,6 +2,7 @@ package com.desafiotecnico.product_card_service.controller;
 
 import com.desafiotecnico.product_card_service.builder.ProductBuilder;
 import com.desafiotecnico.product_card_service.entity.Product;
+import com.desafiotecnico.product_card_service.exception.NotFoundException;
 import com.desafiotecnico.product_card_service.record.CreateProductRecord;
 import com.desafiotecnico.product_card_service.record.ProductResponseDTO;
 import com.desafiotecnico.product_card_service.record.UpdateProductRecord;
@@ -23,9 +24,8 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
-        if (products.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
+
+
 
         List<ProductResponseDTO> productsResponse = products.stream()
                 .map(ProductBuilder::productToResponseDTO)

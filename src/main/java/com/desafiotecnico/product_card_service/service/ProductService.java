@@ -3,10 +3,14 @@ package com.desafiotecnico.product_card_service.service;
 
 import com.desafiotecnico.product_card_service.builder.ProductBuilder;
 import com.desafiotecnico.product_card_service.entity.Product;
+import com.desafiotecnico.product_card_service.exception.DatabaseException;
+import com.desafiotecnico.product_card_service.exception.NoContentException;
+import com.desafiotecnico.product_card_service.exception.NotFoundException;
 import com.desafiotecnico.product_card_service.record.CreateProductRecord;
 import com.desafiotecnico.product_card_service.record.UpdateProductRecord;
 import com.desafiotecnico.product_card_service.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +22,19 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public List<Product> getAllProducts() {
+        try {
+            List<Product> products = productRepository.findAll();
 
-        return productRepository.findAll();
+            if (products.isEmpty()) {
+                throw new NoContentException("No products found");
+            }
+
+            return products;
+
+        } catch (DataAccessException e) {
+            // Lança uma exceção  erros de acesso ao banco de dados
+            throw new DatabaseException("Error fetching products from the database.");
+        }
     }
 
     public Product getProductById(Long id) {
