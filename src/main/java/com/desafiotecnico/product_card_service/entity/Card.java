@@ -1,17 +1,20 @@
 package com.desafiotecnico.product_card_service.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 public class Card {
 
@@ -20,6 +23,13 @@ public class Card {
     private Long id;
     private String number;
     private String holder;
+    private Long productId;
 
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime creationDate;
+
+    @UpdateTimestamp
+    private LocalDateTime updateDate;
 
 }

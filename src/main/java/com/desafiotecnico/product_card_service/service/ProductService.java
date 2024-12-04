@@ -4,10 +4,9 @@ package com.desafiotecnico.product_card_service.service;
 import com.desafiotecnico.product_card_service.builder.ProductBuilder;
 import com.desafiotecnico.product_card_service.entity.Product;
 import com.desafiotecnico.product_card_service.exception.DatabaseException;
-import com.desafiotecnico.product_card_service.exception.NoContentException;
 import com.desafiotecnico.product_card_service.exception.NotFoundException;
-import com.desafiotecnico.product_card_service.record.CreateProductRecord;
-import com.desafiotecnico.product_card_service.record.UpdateProductRecord;
+import com.desafiotecnico.product_card_service.record.ProductRecordCreate;
+import com.desafiotecnico.product_card_service.record.ProducRecordUpdate;
 import com.desafiotecnico.product_card_service.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -23,54 +22,59 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
         try {
-            List<Product> products = productRepository.findAll();
 
-            if (products.isEmpty()) {
-                throw new NoContentException("No products found");
-            }
-
-            return products;
+            return productRepository.findAll();
 
         } catch (DataAccessException e) {
-            // Lança uma exceção  erros de acesso ao banco de dados
-            throw new DatabaseException("Error fetching products from the database.");
+            throw new DatabaseException("Error fetching record from the database.");
         }
     }
 
     public Product getProductById(Long id) {
-
-
-        return productRepository.findById(id).orElse(null);
+        try {
+            return productRepository.findById(id).orElseThrow(() -> new NotFoundException("Record with id " + id + " not found."));
+        } catch (DataAccessException e) {
+            throw new DatabaseException("Error fetching record from the database.");
+        }
     }
 
-    public Product createProduct(CreateProductRecord productRecord) {
+    public Product createProduct(ProductRecordCreate productRecord) {
         Product product = ProductBuilder.ProductRecordToProduct(productRecord);
 
-        return productRepository.save(product);
-    }
+        try {
+            return productRepository.save(product);
 
+        } catch (DataAccessException e) {
+            throw new DatabaseException("Error persisting record to the database.");
+        }
+    }
 
 
     public void deleteProduct(Long id) {
 
-        Product productDeleting =  getProductById(id);
-        if(productDeleting == null) {
-            System.out.println("Product not found");
-            return;
+        Product productDeleting = getProductById(id);
+        if (productDeleting == null) {
+            throw new NotFoundException("Record with id " + id + " not found.");
         }
 
-        productRepository.deleteById(id);
-    }
-
-    public Product updateProduct(Long id, UpdateProductRecord productDetails) {
-        Product existingProduct = productRepository.findById(id).orElse(null);
-
-        if (existingProduct == null) {
-            return null;
+        try {productRepository.deleteById(id);
+        } catch (DataAccessException e) {
+            throw new DatabaseException("Error deleting record from the database.");
         }
-
-        Product updatedProduct = ProductBuilder.updateProductRecordToProduct(productDetails, existingProduct);
-
-        return productRepository.save(updatedProduct);
     }
+
+
+
+    public Product updateProduct(Long id, ProducRecordUpdate productDetails) {
+        try {
+            Product existingProduct = productRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException("Product with id " + id + " not found."));
+            Product updatedProduct = ProductBuilder.updateProductRecordToProduct(productDetails, existingProduct);
+            return productRepository.save(updatedProduct);
+        } catch (DataAccessException e) {
+            throw new DatabaseException("Error updating record to the database.");
+        }
+    }
+
+
 }

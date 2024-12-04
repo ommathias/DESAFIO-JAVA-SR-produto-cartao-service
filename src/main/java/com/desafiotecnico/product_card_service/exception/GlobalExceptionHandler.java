@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
+
 
 
     @ExceptionHandler(DatabaseException.class)
@@ -21,10 +23,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoContentException.class)
-    public ResponseEntity<Void> handleNoContentException(NoContentException e) {
-        throw new NoContentException("No products available at the moment.");
+    public ResponseEntity<String> handleNoContentException(NoContentException e) {
+        return ResponseEntity.ok("No record found.");
     }
-    
 
 
 }

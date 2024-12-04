@@ -1,18 +1,17 @@
 package com.desafiotecnico.product_card_service.builder;
 
 import com.desafiotecnico.product_card_service.entity.Product;
-import com.desafiotecnico.product_card_service.record.CreateProductRecord;
+import com.desafiotecnico.product_card_service.record.ProductRecordCreate;
 import com.desafiotecnico.product_card_service.record.ProductResponseDTO;
-import com.desafiotecnico.product_card_service.record.UpdateProductRecord;
+import com.desafiotecnico.product_card_service.record.ProducRecordUpdate;
 
 public class ProductBuilder {
 
     private ProductBuilder() {
-        // Construtor privado para evitar instâncias
     }
 
     // Convert CreateProductRecord to Product
-    public static Product ProductRecordToProduct(CreateProductRecord request) {
+    public static Product ProductRecordToProduct(ProductRecordCreate request) {
         return Product.builder()
                 .name(request.name())
                 .price(request.price())
@@ -20,7 +19,7 @@ public class ProductBuilder {
     }
 
     // Convert UpdateProductRecord to Product
-    public static Product updateProductRecordToProduct(UpdateProductRecord request, Product existingProduct) {
+    public static Product updateProductRecordToProduct(ProducRecordUpdate request, Product existingProduct) {
         return Product.builder()
                 .id(existingProduct.getId())  // preserve ID from existingProduct
                 .name(request.name() != null ? request.name() : existingProduct.getName())  // updates name

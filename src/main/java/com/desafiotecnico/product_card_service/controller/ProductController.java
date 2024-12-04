@@ -2,10 +2,9 @@ package com.desafiotecnico.product_card_service.controller;
 
 import com.desafiotecnico.product_card_service.builder.ProductBuilder;
 import com.desafiotecnico.product_card_service.entity.Product;
-import com.desafiotecnico.product_card_service.exception.NotFoundException;
-import com.desafiotecnico.product_card_service.record.CreateProductRecord;
+import com.desafiotecnico.product_card_service.record.ProductRecordCreate;
 import com.desafiotecnico.product_card_service.record.ProductResponseDTO;
-import com.desafiotecnico.product_card_service.record.UpdateProductRecord;
+import com.desafiotecnico.product_card_service.record.ProducRecordUpdate;
 import com.desafiotecnico.product_card_service.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +24,13 @@ public class ProductController {
     public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
 
-
+        if (products.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
 
         List<ProductResponseDTO> productsResponse = products.stream()
                 .map(ProductBuilder::productToResponseDTO)
                 .collect(Collectors.toList());
-
 
         return ResponseEntity.ok(productsResponse);
     }
@@ -47,7 +47,7 @@ public class ProductController {
 
 
     @PostMapping
-    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody CreateProductRecord productRecord) {
+    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductRecordCreate productRecord) {
         Product newProduct = productService.createProduct(productRecord);
         ProductResponseDTO response = new ProductResponseDTO(
                 newProduct.getId(),
@@ -60,8 +60,8 @@ public class ProductController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody UpdateProductRecord updateProductRecord) {
-        Product updatedProduct = productService.updateProduct(id, updateProductRecord);
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProducRecordUpdate producRecordUpdate) {
+        Product updatedProduct = productService.updateProduct(id, producRecordUpdate);
         return ResponseEntity.ok(updatedProduct);
     }
 
