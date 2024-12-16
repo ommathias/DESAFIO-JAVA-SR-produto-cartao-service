@@ -2,11 +2,13 @@ package com.desafiotecnico.product_card_service.controller;
 
 import com.desafiotecnico.product_card_service.builder.ProductBuilder;
 import com.desafiotecnico.product_card_service.entity.Product;
+import com.desafiotecnico.product_card_service.exception.NotFoundException;
 import com.desafiotecnico.product_card_service.record.ProductRecordCreate;
 import com.desafiotecnico.product_card_service.record.ProductResponseDTO;
 import com.desafiotecnico.product_card_service.record.ProducRecordUpdate;
 import com.desafiotecnico.product_card_service.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,4 +72,10 @@ public class ProductController {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<String> handleNotFoundException(NotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
 }

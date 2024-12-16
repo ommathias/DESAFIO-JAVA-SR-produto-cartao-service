@@ -20,6 +20,7 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    //GETALL
     public List<Product> getAllProducts() {
         try {
 
@@ -30,14 +31,15 @@ public class ProductService {
         }
     }
 
-    public Product getProductById(Long id) {
-        try {
-            return productRepository.findById(id).orElseThrow(() -> new NotFoundException("Record with id " + id + " not found."));
-        } catch (DataAccessException e) {
-            throw new DatabaseException("Error fetching record from the database.");
-        }
-    }
 
+    //GetByID
+    public Product getProductById(Long id) {
+
+            return productRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException("Record with id " + id + " not found."));
+           }
+
+    //POST
     public Product createProduct(ProductRecordCreate productRecord) {
         Product product = ProductBuilder.ProductRecordToProduct(productRecord);
 
@@ -50,6 +52,7 @@ public class ProductService {
     }
 
 
+    //DELETE
     public void deleteProduct(Long id) {
 
         Product productDeleting = getProductById(id);
@@ -64,7 +67,7 @@ public class ProductService {
     }
 
 
-
+    //PUT
     public Product updateProduct(Long id, ProducRecordUpdate productDetails) {
         try {
             Product existingProduct = productRepository.findById(id)
