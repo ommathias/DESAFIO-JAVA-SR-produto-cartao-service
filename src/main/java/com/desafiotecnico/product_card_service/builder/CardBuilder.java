@@ -19,7 +19,7 @@ public class CardBuilder {
     }
 
     // Convert UpdateCardRecord to Card
-    public static Card CardRecordtoCard(CardRecordUpdate request, Card existingCard) {
+    public static Card UpdateCardRecordtoCard(CardRecordUpdate request, Card existingCard) {
         return Card.builder()
                 .id(existingCard.getId())  // preserve ID from existingCard
                 .number(request.number() != null ? request.number() : existingCard.getNumber())
@@ -30,7 +30,7 @@ public class CardBuilder {
     }
 
     // Card to CardResponseDTO
-    public static CardResponseDTO CardResponseToDTO(Card product) {
+    public static CardResponseDTO CardToCardResponseDTO(Card product) {
         return new CardResponseDTO(
                 product.getId(),
                 product.getNumber(),
