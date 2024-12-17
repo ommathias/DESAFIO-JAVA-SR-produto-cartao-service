@@ -22,13 +22,10 @@ public class ProductService {
 
     //GETALL
     public List<Product> getAllProducts() {
-        try {
 
             return productRepository.findAll();
 
-        } catch (DataAccessException e) {
-            throw new DatabaseException("Error fetching record from the database.");
-        }
+
     }
 
 

@@ -2,6 +2,7 @@ package com.desafiotecnico.product_card_service.service;
 
 import com.desafiotecnico.product_card_service.builder.ClientBuilder;
 import com.desafiotecnico.product_card_service.entity.Client;
+import com.desafiotecnico.product_card_service.exception.NotFoundException;
 import com.desafiotecnico.product_card_service.record.ClientRecordCreate;
 import com.desafiotecnico.product_card_service.repository.ClientRepository;
 import com.desafiotecnico.product_card_service.entity.Client;
@@ -35,6 +36,11 @@ public class ClientService {
             throw new DataIntegrityViolationException("CPF already registered.");
         }
 
+
+    }
+
+    public Client getClientById(Long id){
+        return clientRepository.findById(id).orElseThrow(() -> new NotFoundException("Record with id " + id + " not found."));
 
     }
 

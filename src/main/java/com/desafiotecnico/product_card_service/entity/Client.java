@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 @Data
+@Table(uniqueConstraints = @UniqueConstraint(name = "uk_client_cpf", columnNames = "cpf"))
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
