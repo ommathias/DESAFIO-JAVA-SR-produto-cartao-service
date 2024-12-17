@@ -11,6 +11,7 @@ public class ProductBuilder {
     }
 
     // Convert CreateProductRecord to Product
+    // The plant for the new entity
     public static Product ProductRecordToProduct(ProductRecordCreate request) {
         return Product.builder()
                 .name(request.name())
@@ -19,6 +20,8 @@ public class ProductBuilder {
     }
 
     // Convert UpdateProductRecord to Product
+
+    //instructions to update
     public static Product updateProductRecordToProduct(ProducRecordUpdate request, Product existingProduct) {
         return Product.builder()
                 .id(existingProduct.getId())  // preserve ID from existingProduct
@@ -30,6 +33,8 @@ public class ProductBuilder {
     }
 
     // Product to ProductResponseDTO
+
+    //pictures of the entity
     public static ProductResponseDTO productToResponseDTO(Product product) {
         return new ProductResponseDTO(
                 product.getId(),
