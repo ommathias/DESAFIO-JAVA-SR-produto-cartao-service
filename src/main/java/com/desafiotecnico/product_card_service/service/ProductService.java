@@ -66,14 +66,12 @@ public class ProductService {
 
     //PUT
     public Product updateProduct(Long id, ProducRecordUpdate productDetails) {
-        try {
+
             Product existingProduct = productRepository.findById(id)
                     .orElseThrow(() -> new NotFoundException("Product with id " + id + " not found."));
             Product updatedProduct = ProductBuilder.updateProductRecordToProduct(productDetails, existingProduct);
             return productRepository.save(updatedProduct);
-        } catch (DataAccessException e) {
-            throw new DatabaseException("Error updating record to the database.");
-        }
+
     }
 
 
