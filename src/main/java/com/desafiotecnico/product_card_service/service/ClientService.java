@@ -7,12 +7,14 @@ import com.desafiotecnico.product_card_service.exception.NotFoundException;
 import com.desafiotecnico.product_card_service.record.ClientRecordCreate;
 import com.desafiotecnico.product_card_service.record.ClientRecordUpdate;
 import com.desafiotecnico.product_card_service.repository.ClientRepository;
-import com.desafiotecnico.product_card_service.entity.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
+
 
 import java.util.List;
+@Slf4j
 
 @Service
 public class ClientService {
@@ -48,17 +50,17 @@ public class ClientService {
 
     public Client updateClient(Long id, ClientRecordUpdate clientRecordUpdate) {
         Client existingClient = clientRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Cliente com ID " + id + " não encontrado"));
+                .orElseThrow(() -> new NotFoundException("Client with ID " + id + " not found"));
 
         try {
             Client updatedClient = ClientBuilder.updateClientRecordToClient(clientRecordUpdate, existingClient);
             return clientRepository.save(updatedClient);
         } catch (DataIntegrityViolationException ex) {
             if (ex.getMessage().contains("uk_client_cpf")) {
-                throw new DuplicateCpfException("CPF '" + clientRecordUpdate.cpf() + "' já cadastrado");
+                throw new DuplicateCpfException("CPF '" + clientRecordUpdate.cpf() + "' already registered");
             } else {
-                log.error("Erro de integridade de dados:", ex);
-                throw new RuntimeException("Erro ao atualizar cliente", ex);
+                log.error("Integrity error:", ex);
+                throw new RuntimeException("Error updating client", ex);
 
             }
         }
